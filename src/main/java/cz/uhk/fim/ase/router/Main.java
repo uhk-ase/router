@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Main {
 
-    final public static String DEFAULT_ADDRESS = "*";
+    final public static String DEFAULT_ADDRESS = "127.0.0.1";
     final public static String DEFAULT_INCOMING_PORT = "13337";
     final public static String DEFAULT_OUTCOMING_PORT = "14447";
     final public static int DEFAULT_THREADS = 4;

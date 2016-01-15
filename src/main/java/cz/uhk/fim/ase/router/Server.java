@@ -1,5 +1,6 @@
 package cz.uhk.fim.ase.router;
 
+import java.math.BigInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zeromq.ZMQ;
@@ -28,14 +29,17 @@ public class Server {
 
         ZMQ.Context context = ZMQ.context(threads);
 
-        ZMQ.Socket subscriberSocket = context.socket(ZMQ.XSUB);
+        ZMQ.Socket subscriberSocket = context.socket(ZMQ.ROUTER);
         subscriberSocket.bind("tcp://" + address + ":" + incomingPort);
 
-        ZMQ.Socket publisherSocket = context.socket(ZMQ.XPUB);
+        ZMQ.Socket publisherSocket = context.socket(ZMQ.PUB);
         publisherSocket.bind("tcp://" + address + ":" + outcomingPort);
 
         logger.debug("Server for routing successfully started");
-        ZMQ.proxy(subscriberSocket, publisherSocket, null);
+        while (!Thread.currentThread().isInterrupted()) {
+            byte[] bytes = subscriberSocket.recv(0);
+            publisherSocket.send(bytes);
+        }
         logger.debug("Server for routing shutdown");
     }
 }
